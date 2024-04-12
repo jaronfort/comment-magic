@@ -1,0 +1,16 @@
+src
+.husky
+.github
+node_modules
+coverage
+tests
+.eslintrc.js
+.npmignore
+.prettierrc
+babel.config.js
+CHANGELOG.md
+jest.unit.json
+Makefile
+package.json
+tsconfig.json
+yarn.lock
