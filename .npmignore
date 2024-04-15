@@ -13,4 +13,5 @@ jest.unit.json
 Makefile
 package.json
 tsconfig.json
-yarn.lock
+pnpm-lock.lock
+README.md
