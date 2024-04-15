@@ -19,14 +19,17 @@ jobs:
       - id: setup-env
         name: Setup Environment
         run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - id: install
         name: Install Dependencies
-        run: yarn install
+        run: pnpm install
 
       - id: build
         name: Build
-        run: yarn build
+        run: pnpm build
 
       - id: publish
         name: Publish
