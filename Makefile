@@ -1,49 +1,49 @@
 dev:
-	yarn dev
+	pnpm dev
 
 build:
-	yarn build
+	pnpm build
 b: build
 
 start:
-	yarn start
+	pnpm start
 s: start
 
 test:
-	yarn test
+	pnpm test
 t: test
 .PHONY: test
 
 test-watch:
-	yarn test:watch
+	pnpm test:watch
 tw: test-watch
 
 test-update:
-	yarn test -u
+	pnpm test -u
 tu: test-update
 
 coverage:
-	yarn test:coverage
+	pnpm test:coverage
 cov: coverage
 test-coverage: coverage
 tc: coverage
 .PHONY: coverage
 
 install:
-	yarn install
+	pnpm install
 i: install
 
 reinstall:
 	@echo Reinstalling dependencies...
-	@yarn install --force
-	@yarn clean
+	@pnpm install --force
+	@pnpm clean
 	@echo Done.
 ri: reinstall
 .PHONY: reinstall
 
 clean:
 	@echo Cleaning build directory...
-	@yarn clean
+	@pnpm clean
 	@echo Done.
 c: clean
 
@@ -54,11 +54,11 @@ release:
 r: release
 
 format:
-	@yarn format
+	@pnpm format
 f: format
 
 lint:
-	@yarn lint
+	@pnpm lint
 l: lint
 
 undo:
