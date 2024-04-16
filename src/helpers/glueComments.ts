@@ -42,7 +42,7 @@ export function glueComments(commentLines: CommentLine[], options: CommentGlueOp
 			const { text } = commentLine;
 			const commentContent = getCommentContent(text);
 
-			const result = `${leadingWhitespace} *${spaces}${commentContent}`;
+			const result = commentContent ? `${leadingWhitespace} *${spaces}${commentContent}` : `${leadingWhitespace} *`;
 
 			if (index === firstNonEmptyLineIndex && addEmptyLineAfterRawDescription && firstEmptyLineContents.startsWith('@')) {
 				return `${result}\n${leadingWhitespace} *\n`;
