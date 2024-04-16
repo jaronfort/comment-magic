@@ -11,19 +11,4 @@ export type CommentLine = {
 	 * The text of the comment.
 	 */
 	text: string;
-
-	/**
-	 * The file path of the comment.
-	 */
-	filePath: string;
-
-	/**
-	 * The type of comment.
-	 */
-	type: string;
-
-	/**
-	 * The language of the comment.
-	 */
-	language: string;
 };

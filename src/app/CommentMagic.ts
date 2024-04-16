@@ -1,26 +1,23 @@
 import chalk from 'chalk';
 import path from 'path';
 
-import { handleFileOrDirectory } from '@/helpers';
-import { getFileExtension } from '@/utils/filesystem';
+import { convertInlineCommentToBlock, handleFileOrDirectory } from '@/helpers';
 
+import { CommentMagicBase } from './CommentMagicBase';
 import { CommentMagicConfig } from './CommentMagicConfig';
+import { writeFile } from '@/utils/filesystem';
 
 /**
  * The CommentMagic application.
  */
-export class CommentMagic {
-	/**
-	 * A list of all files that were processed.
-	 */
-	protected readonly processedFiles: string[] = [];
-
+export class CommentMagic extends CommentMagicBase {
 	/**
 	 * Initializes a new instance of the CommentMagic class.
 	 *
 	 * @param {CommentMagicConfig} config The configuration for the CommentMagic application.
 	 */
-	constructor(protected readonly config: CommentMagicConfig) {
+	constructor(config: CommentMagicConfig) {
+		super(config);
 		this.handleFile = this.handleFile.bind(this);
 		this.handleDirectory = this.handleDirectory.bind(this);
 	}
@@ -42,16 +39,9 @@ export class CommentMagic {
 		}
 
 		// Output the number of files that were processed.
-		console.log(chalk.bold(this.getProcessedFileCountString()));
+		this.output(chalk.bold(this.getProcessedFileCountString()));
 
 		return true;
-	}
-
-	/**
-	 * The number of files that were processed during the run.
-	 */
-	get numberOfProcessedFiles(): number {
-		return this.processedFiles.length;
 	}
 
 	/**
@@ -72,29 +62,34 @@ export class CommentMagic {
 	private handleFile(filePath: string, fileContents: string): void {
 		const fileName = path.basename(filePath);
 
-		if (this.config.exclude.includes(fileName)) {
+		if (this.isExcluded(fileName)) {
 			// Skip the file if it is in the exclude list
 			this.debugOutput(chalk.yellow(`${chalk.bold('[SKIPPED]')} ${filePath}`));
 			return;
 		}
 
-		const fileExtension = `.${getFileExtension(filePath)}`;
-		const extensions: string[] = this.config.extensions as string[];
-
-		if (!extensions.includes(fileExtension)) {
+		if (!this.isExtensionIncluded(filePath)) {
 			// Skip the file if it is not in the extensions list
 			this.debugOutput(chalk.yellow(`${chalk.bold('[SKIPPED]')} ${filePath}`));
 			return;
 		}
 
-		// Process the file
-		console.log(chalk.magentaBright(filePath));
-		// TODO: Process the file contents
+		// Convert the inline comments to multi-line comments
+		const convertedContents = convertInlineCommentToBlock(fileContents, {
+			spacesAfterCommentStart: 1,
+		});
 
-		this.processedFiles.push(filePath);
+		if (fileContents !== convertedContents) {
+			// Overwrite the file with the converted contents
+			writeFile(filePath, convertedContents);
 
-		if (false) {
-			console.log(fileContents);
+			// Process the file
+			this.output(chalk.magentaBright(filePath));
+
+			this.processedFiles.push(filePath);
+		} else {
+			// Skip the file if it was not modified
+			this.debugOutput(chalk.yellow(`${chalk.bold('[SKIPPED]')} ${filePath}`));
 		}
 	}
 
@@ -107,7 +102,7 @@ export class CommentMagic {
 	private handleDirectory(filePath: string, directoryContents: string[]): void {
 		const fileName = path.basename(filePath);
 
-		if (this.config.exclude.includes(fileName)) {
+		if (this.isExcluded(fileName)) {
 			// Skip the directory if it is in the exclude list
 			this.debugOutput(chalk.yellow(`${chalk.bold('[SKIPPED]')} ${filePath}`));
 			return;
@@ -124,29 +119,5 @@ export class CommentMagic {
 
 			handleFileOrDirectory(absolutePath, this.handleFile, this.handleDirectory);
 		}
-	}
-
-	/**
-	 * Prints the given output if the debug flag is set.
-	 */
-	private debugOutput(output: string): void {
-		if (this.config.debug) {
-			console.log(output);
-		}
-	}
-
-	/**
-	 * Computes the final processed file count string.
-	 */
-	private getProcessedFileCountString(): string {
-		if (this.numberOfProcessedFiles === 0) {
-			return chalk.redBright('No files processed.');
-		}
-
-		if (this.numberOfProcessedFiles === 1) {
-			return chalk.greenBright('Processed 1 file.');
-		}
-
-		return chalk.greenBright(`Processed ${this.numberOfProcessedFiles} files.`);
 	}
 }

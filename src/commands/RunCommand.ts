@@ -56,13 +56,13 @@ export class RunCommand extends AppCommand {
 					paths: options.path,
 					extensions: options.extensions,
 					dryRun: options.dryRun,
-					silent: options.silent,
+					silent: options.silent && !options.debug,
 					exclude: options.overrideDefaultExclude ? options.exclude : removeDuplicates([...defaultExclude, ...options.exclude]),
 					maxLineLength: Number(options.maxLineLength) || 80,
 				};
 
 				if (config.debug) {
-					console.log(chalk.yellow('Running with the following configuration:'));
+					console.log(chalk.bold(chalk.yellow('Running with the following configuration:')));
 					// TODO: Output the configuration (verbose)
 				}
 
