@@ -1,8 +1,8 @@
 {
   "name": "comment-magic",
   "description": "Converts lazily written `///` comments into multiline comments.",
-  "version": "0.2.0",
-  "main": "dist/index.js",
+  "version": "0.2.1",
+  "main": "dist/src/index.js",
   "types": "dist",
   "bin": {
     "commag": "dist/index.js"
