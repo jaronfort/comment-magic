@@ -13,8 +13,18 @@ jobs:
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v4
+      - id: install-pnpm
+        name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+      - id: install-node
+        name: Install Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: pnpm
@@ -27,14 +37,14 @@ jobs:
 
       - id: install
         name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - id: build
-        name: Build
+        name: Build 📦
         run: pnpm build
 
       - id: publish
-        name: Publish
+        name: Publish 🚀
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
