@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - release/**
+      - hotfix/**
 
 jobs:
   publish:
@@ -11,29 +13,42 @@ jobs:
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v4
+      - id: install-pnpm
+        name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          node-version: 16
-          cache: yarn
+          version: 8
+          run_install: false
+      - id: install-node
+        name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
       - id: setup-env
         name: Setup Environment
         run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - id: install
         name: Install Dependencies
-        run: yarn install
+        run: pnpm install --frozen-lockfile
 
       - id: build
-        name: Build
-        run: yarn build
+        name: Build 📦
+        run: pnpm build
 
       - id: publish
-        name: Publish
+        name: Publish 🚀
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          access: restricted
+          access: public
           check-version: true
 
       - if: steps.publish.outputs.type != 'none'
