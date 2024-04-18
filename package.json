@@ -1,11 +1,11 @@
 {
   "name": "comment-magic",
   "description": "Converts lazily written `///` comments into multiline comments.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "dist/src/index.js",
   "types": "dist",
   "bin": {
-    "commag": "dist/index.js"
+    "commag": "dist/src/index.js"
   },
   "scripts": {
     "dev": "npx ts-node -r tsconfig-paths/register ./src/index.ts",
