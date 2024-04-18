@@ -18,33 +18,28 @@ export class TestCommand extends AppCommand {
 				console.log(chalk.bold('Test:'), 'Test');
 
 				const testContent = `
-					/**
-					 * This is a test comment
-					 * @param test - The test parameter
-					 * @returns The test result
-					 */
+					///
+					/// This is a test comment
+					/// @param test - The test parameter
+					/// @returns The test result
 					function test(test: string): string {
 						return test;
 					}
 
-					/**
-					 * This is another test comment
-					 * @param test - The test parameter
-					 * 
-					 * @returns The test result
-					 */
+					/// This is a test comment
+					///
+					/// @param test - The test parameter
+					/// @returns The test result
 					function test2(test: string): string {
 						return test;
 					}
 
 					const test = 'test'; /// This should not be processed
 
-					/**
-					 * This is a multi-line comment
-					 * This is the second line
-					 * 
-					 * This is the third line
-					 */
+					/// This is a test comment
+					///
+					/// @param test - The test parameter
+					/// @returns The test result
 					const test2 = 'test'; // This also should not be processed
 				`;
 
